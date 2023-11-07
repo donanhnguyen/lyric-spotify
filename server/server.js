@@ -2,20 +2,21 @@ const express = require('express');
 const SpotifyWebApi = require('spotify-web-api-node');
 const cors = require("cors")
 const bodyParser = require("body-parser")
-const lyricsFinder = require('lyrics-finder')
+const axios = require('axios');
 
 const app = express();
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
+require('dotenv').config();
 
 // refresh
 
 app.post('/refresh', (req, res) => {
     const refreshToken = req.body.refreshToken
     const spotifyApi = new SpotifyWebApi({
-        clientId: '3762e76b0589453c882fd03dc454aa60',
-        clientSecret: '519db0a8c6de4f508dbffb00814dd0e5',
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         redirectUri: 'http://localhost:3000',
         refreshToken
     })
@@ -36,9 +37,9 @@ app.post('/refresh', (req, res) => {
 app.post('/login', (req, res) => {
     const code = req.body.code;
     const spotifyApi = new SpotifyWebApi({
-        clientId: '3762e76b0589453c882fd03dc454aa60',
-        clientSecret: '519db0a8c6de4f508dbffb00814dd0e5',
-        redirectUri: 'http://localhost:3000'
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+        redirectUri: 'http://localhost:3000',
     }) 
     spotifyApi.authorizationCodeGrant(code)
         .then((data) => {
@@ -56,11 +57,27 @@ app.post('/login', (req, res) => {
 // find lyrics
 
 app.get('/lyrics', async (req, res) => {
-    const lyrics = await lyricsFinder(req.query.artist, req.query.track)
-    console.log("lyrics")
-    console.log(req.query)
-    console.log(lyrics)
-    res.json({lyrics});
+
+    const options = {
+        method: 'GET',
+        url: 'https://musixmatch-lyrics-songs.p.rapidapi.com/songs/lyrics',
+        params: {
+          t: req.query.track,
+          a: req.query.artist,
+          type: 'json'
+        },
+        headers: {
+          'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+          'X-RapidAPI-Host': 'musixmatch-lyrics-songs.p.rapidapi.com'
+        }
+      };
+      
+      try {
+          const response = await axios.request(options);
+          res.json(response.data);
+      } catch (error) {
+          console.error(error.data);
+      }
 })
 
  app.listen(3001);

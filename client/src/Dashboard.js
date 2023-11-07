@@ -40,7 +40,7 @@ export default function Dashboard({code}) {
     }
     axios.get('http://localhost:3001/lyrics', {params})
         .then((response) => {
-          setSongLyrics(response.data.lyrics)
+          setSongLyrics(response.data)
         })
     
   }, [currentlyPlaying])
@@ -111,8 +111,14 @@ export default function Dashboard({code}) {
           })}
 
           {searchResults.length === 0 && (
-            <div className='text-center' style={{whiteSpace: 'pre'}}>
-              {songLyrics}
+            <div className='text-center' style={{whiteSpace: 'pre', color: 'white'}}>
+              
+              {songLyrics.length > 0 && songLyrics.map((lyric, i) => {
+                  return (
+                    <div key={i}>{lyric.text}</div>
+                  )
+              })}
+
             </div>
           )}
 
