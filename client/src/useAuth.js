@@ -16,7 +16,7 @@ export default function useAuth(code) {
                 // window.history.pushState({}, null, "/")
             })
             .catch(() => {
-                console.log("errorrr log in")
+                // console.log("errorrr log in")
                 // window.location = '/' 
             })
     }, [code]) 
@@ -33,7 +33,7 @@ export default function useAuth(code) {
                         setExpiresIn(response.data.expiresIn);    
                     })
                     .catch(() => {
-                        console.log("errorrr refresh")
+                        // console.log("errorrr refresh")
                         // window.location = '/'
                     })
                 }, (expiresIn -60) * 1000)
