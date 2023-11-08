@@ -2,7 +2,7 @@
 
 [Live Link](https://lyric-spotify.onrender.com)
 <br>
-[Video Link](https://www.youtube.com/watch?v=0q-spgyg6k8)
+[Video Link](https://www.youtube.com/watch?v=wWffg9nlKBk)
 
 <h1>Description</h1>
 
