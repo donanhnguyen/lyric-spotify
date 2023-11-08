@@ -1,16 +1,21 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import useAuth from './useAuth';
 import { Container, Form } from 'react-bootstrap';
 import SpotifyWebApi from 'spotify-web-api-node';
 import TrackSearchResult from './TrackSearchResult';
 import Player from './Player';
 import axios from 'axios';
+import GlobalContext from './GlobalContext';
 
 const spotifyApi = new SpotifyWebApi({
   clientId: '3762e76b0589453c882fd03dc454aa60',
 }) 
 
 export default function Dashboard({code}) {
+
+  const {
+    renderURL
+  } = useContext(GlobalContext);
 
   const accessToken = useAuth(code);
   const [search, setSearch] = useState("")
@@ -38,7 +43,7 @@ export default function Dashboard({code}) {
       track: currentlyPlaying.title,
       artist: currentlyPlaying.artist
     }
-    axios.get('http://localhost:3001/lyrics', {params})
+    axios.get(`${renderURL}/lyrics`, {params})
         .then((response) => {
           setSongLyrics(response.data)
         })
@@ -92,6 +97,18 @@ export default function Dashboard({code}) {
 
   }, [search, accessToken])
 
+  function displayLyrics () {
+    if (songLyrics.length > 0) {
+      return songLyrics.map((lyric, i) => {
+        return (
+          <div key={i}>{lyric.text}</div>
+        )
+      })
+    } else if (currentlyPlaying && !songLyrics.length) {
+      return <div>No Lyrics Found.</div>
+    }
+  }
+
   return (
     <Container className='d-flex flex-column py-2' style={{height: '100vh'}}>
     
@@ -113,15 +130,7 @@ export default function Dashboard({code}) {
           {searchResults.length === 0 && (
             <div className='text-center' style={{whiteSpace: 'pre', color: 'white', background: 'radial-gradient(#303030, black)', minHeight: '100%', fontSize: '1.2em'}}>
               
-              {songLyrics.length > 0 ?
-                songLyrics.map((lyric, i) => {
-                  return (
-                    <div key={i}>{lyric.text}</div>
-                  )
-                })
-               :
-                <div>No Lyrics Found.</div>
-              }
+              {displayLyrics()}
 
             </div>
           )}

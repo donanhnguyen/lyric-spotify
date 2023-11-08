@@ -1,13 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import axios from 'axios';
+import GlobalContext from './GlobalContext';
 
 export default function useAuth(code) {
-    const [accessToken, setAccessToken] = React.useState();
-    const [refreshToken, setRefreshToken] = React.useState();
-    const [expiresIn, setExpiresIn] = React.useState();
+
+    const [accessToken, setAccessToken] = useState();
+    const [refreshToken, setRefreshToken] = useState();
+    const [expiresIn, setExpiresIn] = useState();
+
+    const {renderURL} = useContext(GlobalContext);
 
     useEffect(() => {
-        axios.post("http://localhost:3001/login", {code})
+        axios.post(`${renderURL}/login`, {code})
             .then((response) => {
                 // console.log(response.data)
                 setAccessToken(response.data.accessToken);
@@ -26,7 +30,7 @@ export default function useAuth(code) {
             return
         } else {
            const timeOut = setInterval(() => {
-                axios.post("http://localhost:3001/refresh", {refreshToken})
+                axios.post(`${renderURL}/refresh`, {refreshToken})
                     .then((response) => {
                         // console.log(response.data) 
                         setAccessToken(response.data.accessToken);
