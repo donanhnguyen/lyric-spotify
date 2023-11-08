@@ -111,13 +111,17 @@ export default function Dashboard({code}) {
           })}
 
           {searchResults.length === 0 && (
-            <div className='text-center' style={{whiteSpace: 'pre', color: 'white'}}>
+            <div className='text-center' style={{whiteSpace: 'pre', color: 'white', background: 'radial-gradient(#303030, black)', minHeight: '100%', fontSize: '1.2em'}}>
               
-              {songLyrics.length > 0 && songLyrics.map((lyric, i) => {
+              {songLyrics.length > 0 ?
+                songLyrics.map((lyric, i) => {
                   return (
                     <div key={i}>{lyric.text}</div>
                   )
-              })}
+                })
+               :
+                <div>No Lyrics Found.</div>
+              }
 
             </div>
           )}
