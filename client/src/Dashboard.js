@@ -8,7 +8,7 @@ import axios from 'axios';
 import GlobalContext from './GlobalContext';
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: '3762e76b0589453c882fd03dc454aa60',
+  clientId: process.env.SPOTIFY_CLIENT_ID,
 }) 
 
 export default function Dashboard({code}) {

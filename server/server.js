@@ -10,6 +10,14 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 require('dotenv').config();
 
+
+var redirect = 'https://lyric-spotify.onrender.com'
+
+// uncomment below in dev mode
+
+// var redirect = 'http://localhost:3000'
+
+
 // refresh
 
 app.post('/refresh', (req, res) => {
@@ -17,7 +25,7 @@ app.post('/refresh', (req, res) => {
     const spotifyApi = new SpotifyWebApi({
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-        redirectUri: 'http://localhost:3000',
+        redirectUri: redirect,
         refreshToken
     })
     spotifyApi.refreshAccessToken()
@@ -39,7 +47,7 @@ app.post('/login', (req, res) => {
     const spotifyApi = new SpotifyWebApi({
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-        redirectUri: 'http://localhost:3000',
+        redirectUri: redirect,
     }) 
     spotifyApi.authorizationCodeGrant(code)
         .then((data) => {

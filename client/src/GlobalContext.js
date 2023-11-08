@@ -8,7 +8,7 @@ export function GlobalProvider( {children} ) {
     if (process.env.NODE_ENV === "development") {
         renderURL = "http://localhost:3001";
     } else if (process.env.NODE_ENV === 'production') {
-        renderURL = "https://hotelstays-backend.onrender.com";
+        renderURL = "https://lyric-spotify-backend.onrender.com";
     };
     
     return (
